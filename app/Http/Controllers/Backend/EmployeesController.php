@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\EmployeesStoreRequest;
 use App\Models\Employee;
 use App\Http\Requests\EmployeeStoreRequest;
 use App\Http\Requests\EmployeeUpdateRequest;
 use Illuminate\Http\Request;
-use App\Models\Role;
 class EmployeesController extends Controller
 {
     /**
@@ -32,9 +30,8 @@ class EmployeesController extends Controller
      */
     public function create()
     {
-        $roles=Role::all();
 
-        return view('employees.created',compact('roles'));
+        return view('employees.created');
     }
 
     /**
@@ -74,7 +71,7 @@ class EmployeesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(EmployeeStoreRequest $request, Employee $employee)
+    public function update(EmployeeUpdateRequest $request, Employee $employee)
     {
         $employee->update([
             'username' => $request->username,

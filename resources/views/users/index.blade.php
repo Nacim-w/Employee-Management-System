@@ -44,6 +44,7 @@
           <th scope="col">Username</th>
           <th scope="col">First Name</th>
           <th scope="col">Last Name</th>
+          <th scope="col">Roles</th>
           <th scope="col">Email</th>
           <th scope="col">Manage</th>
        </tr>
@@ -55,7 +56,9 @@
             <td> {{$user->username}}</td>
             <td> {{$user->first_name}}</td>
             <td> {{$user->last_name}}</td>
+            <td> {{implode(' ',$user->roles()->get()->pluck('name')->toArray())}}</td>
             <td> {{$user->email}}</td>
+            
             
              <td>
                  <a href="{{route('users.edit',$user->id)}}" class="btn btn-success">Edit</a>

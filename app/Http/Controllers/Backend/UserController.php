@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
+use App\Models\Role;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -18,13 +19,18 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-  
+   
      $users=User::all();
      if($request->has('search')){
-         $users=User::where('username','like',"%{$request->search}%")->orWhere('email','like',"%{$request->search}%")->orWhere('first_name','like',"%{$request->search}%")->orWhere('last_name','like',"%{$request->search}%")->get();
+         $users=User::where('username','like',"%{$request->search}%")->orWhere('email','like',"%{$request->search}%")->orWhere('first_name','like',"%{$request->search}%")->orWhere('last_name','like',"%{$request->search}%")->orWhere('email','like',"%{$request->search}%")->get();
      }
+     if(Gate::allows('is-admin')){
+
      return view('users.index', compact ('users'));
     }
+    dd('You Need To Be An Admin To Use This');
+
+}
 
     /**
      * Show the form for creating a new resource.
@@ -33,7 +39,7 @@ class UserController extends Controller
      */
     public function create()
     {
-      return view('users.created');
+      return view('users.created',['roles'=>Role::all()]);
     }
 
     /**
@@ -44,14 +50,9 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $request)
     {
-        User::create([
-            'username' => $request->username,
-            'first_name' =>$request->first_name,
-            'last_name' => $request->last_name,
-            'email' =>$request->email,  
-            'password' => Hash::make($request->password)
-        ]);
-        return redirect()->route('users.index')->with('message','User Registered!')->with('message_status', 'success');
+     $user=   User::create($request->except(['_token','roles']));
+     $user->roles()->sync($request->roles);      
+       return redirect()->route('users.index')->with('message','User Registered!')->with('message_status', 'success');
     }
 
 
@@ -61,9 +62,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-        return view('users.edit', compact('user'));
+        return view('users.edit', 
+        [
+            'roles'=>Role::all(),
+            'user'=>User::find($id)
+        ]);
     }
 
     /**
@@ -75,13 +80,8 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $user)
     {
-        $user->update([
-            'username' => $request->username,
-            'first_name' =>$request->first_name,
-            'last_name' => $request->last_name,
-            'email' =>$request->email,  
-
-        ]);
+        $user->update($request->except(['_token','roles']));
+        $user->roles()->sync($request->roles);       
         return redirect()->route('users.index')->with('message','User Edited!')->with('message_status', 'success');
     }
 

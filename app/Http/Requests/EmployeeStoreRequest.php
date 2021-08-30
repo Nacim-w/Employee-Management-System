@@ -31,7 +31,6 @@ class EmployeeStoreRequest extends FormRequest
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'address' => ['required', 'string', 'max:255'],
                 'date_of_birth' => ['required', 'date'],
-                'role_id' => ['required'],
 
            
         ];

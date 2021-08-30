@@ -7,6 +7,8 @@ use App\Models\Role;
 use App\Http\Requests\RoleStoreRequest;
 use App\Http\Requests\RoleUpdateRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+
 
 class RolesController extends Controller
 {
@@ -17,8 +19,13 @@ class RolesController extends Controller
         if($request->has('search')){
             $roles=Role::where('name','like',"%{$request->search}%")->get();
         }
+        if(Gate::allows('is-admin')){
+
         return view('roles.index',compact("roles"));
     }
+    dd('You Need To Be An Admin To Use This');
+
+}
     public function create()
     {
         return view('roles.created');

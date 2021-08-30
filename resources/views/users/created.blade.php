@@ -68,7 +68,28 @@
                             </div>
                         </div>
 
-                        
+                       <div class="form-group row">
+                            <label for="role_id" class="col-md-4 col-form-label text-md-right">{{ __('Role') }}</label>
+                            <div class="col-md-6">
+                            @foreach($roles as $role)
+                            <div class="form-check">
+                                <input class="form-check-input" name="roles[]"
+                                type="checkbox" value="{{$role->id}}"
+                                id="{{$role->name}}">
+                                <label class="form-check-label"
+                                for="{{$role->name}}">
+                                {{$role->name}}
+                                </label>
+                            </div>
+                            @endforeach
+                                @error('role')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>   
+
 
                         <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
