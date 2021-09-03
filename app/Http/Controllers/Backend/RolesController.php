@@ -8,6 +8,7 @@ use App\Http\Requests\RoleStoreRequest;
 use App\Http\Requests\RoleUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Models\User;
 
 
 class RolesController extends Controller
@@ -15,6 +16,8 @@ class RolesController extends Controller
     public function index(Request $request)
     {
         $roles=Role::all();
+        $users=User::all();
+
         
         if($request->has('search')){
             $roles=Role::where('name','like',"%{$request->search}%")->get();
@@ -23,7 +26,7 @@ class RolesController extends Controller
 
         return view('roles.index',compact("roles"));
     }
-    dd('You Need To Be An Admin To Use This');
+    return view('employees.role', compact ('users'));
 
 }
     public function create()

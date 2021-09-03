@@ -28,8 +28,7 @@ class UserController extends Controller
 
      return view('users.index', compact ('users'));
     }
-    dd('You Need To Be An Admin To Use This');
-
+    return view('employees.index', compact ('users'));
 }
 
     /**
